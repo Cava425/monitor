@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>登录</title>
+	<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+
+<body>
+	<div class="lowin lowin-blue">
+		<div class="lowin-brand">
+			<img src="{% static 'kodinger.jpg' %}" alt="logo">
+		</div>
+		<div class="lowin-wrapper">
+			<div class="lowin-box lowin-login">
+				<div class="lowin-box-inner">
+					<form method="post" action="{% url 'account:login' %}">
+                        {% csrf_token %}
+						<p>登陆</p>
+                        {% if message %}
+                            <div class="alert alert-warning">
+                                <p><p style="text-align: center; color: red">{{ message }}</p></p>
+                            </div>
+                        {% endif %}
+						<div class="lowin-group">
+							<!--<a class="login-back-link"></a>-->
+							<input type="email" name="email" placeholder="邮箱" autocomplete="email" class="lowin-input">
+						</div>
+						<div class="lowin-group password-group">
+							<!--<a href="#" class="forgot-link"></a>-->
+							<input type="password" name="password" placeholder="密码" autocomplete="current-password" class="lowin-input">
+						</div>
+						<button class="lowin-btn login-btn">
+							登陆
+						</button>
+						<div class="text-foot">
+							没有账号? <a href="{% url 'account:register' %}" class="register-link">注册</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<footer class="lowin-footer">
+			Design By <a href="#">@sun</a>
+		</footer>
+	</div>
+</body>
+</html>

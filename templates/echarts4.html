@@ -1,0 +1,144 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>后台登录-X-admin2.2</title>
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+        <link rel="stylesheet" href="{% static 'css/font.css' %}">
+        <link rel="stylesheet" href="{% static 'css/xadmin.css' %}">
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <blockquote class="layui-elem-quote">
+                                一周视图：最近一周每日学习学习时长。
+                            </blockquote>
+                            <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                            <div id="main" style="width: 100%;height:400px;"></div>
+                            <blockquote class="layui-elem-quote">
+                                备注：
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+        <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/extension/bmap.min.js"></script>
+        <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var dates = [];
+
+        $.ajax({
+            type: "post",
+            async: true,
+            url: "/echarts2/",
+            data: {},
+            dataType: "json",
+            success: function (result) {
+                if(result){
+                    for(var i=0; i<result.length; i++){
+                        dates.push(result[i]);
+                    }
+
+                    myChart.hideLoading();
+
+                    myChart.setOption(option);
+
+                }
+            },
+            error: function (errorMsg) {
+                alert("图表请求失败！");
+                myChart.hideLoading();
+            }
+        });
+
+
+        // 指定图表的配置项和数据
+        option = {
+            backgroundColor: '#2c343c',
+
+            title: {
+                text: '一周学习时长',
+                left: 'center',
+                top: 20,
+                textStyle: {
+                    color: '#ccc'
+                }
+            },
+
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+
+            visualMap: {
+                show: false,
+                min: 0,
+                max: 300,
+                inRange: {
+                    colorLightness: [0, 1]
+                }
+            },
+            series : [
+                {
+                    name:'workday',
+                    type:'pie',
+                    radius : '60%',
+                    center: ['50%', '50%'],
+                    data: dates.sort(function (a, b) { return a.value - b.value}),
+                    roseType: 'angle',
+                    label: {
+                        normal: {
+                            textStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            },
+                            smooth: 0.2,
+                            length: 10,
+                            length2: 20
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#c23531',
+                            shadowBlur: 200,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+    </body>
+</html>
